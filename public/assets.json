@@ -1,0 +1,286 @@
+[
+  {
+    "id": "portrait-dhruv",
+    "type": "image",
+    "method": "generate",
+    "description": "Professional headshot of Dhruv Chaudhari, a young male software developer in his late teens, wearing a dark casual shirt, confident expression, neutral dark background, warm studio lighting, sharp focus on face",
+    "ratio": "1:1",
+    "output": "assets/portrait-dhruv.jpg"
+  },
+  {
+    "id": "deco-moon",
+    "type": "image",
+    "method": "generate",
+    "description": "3D rendered glossy crescent moon shape, smooth silver surface with soft reflections, floating against transparent background, soft studio lighting, minimalist style",
+    "ratio": "1:1",
+    "output": "assets/deco-moon.png",
+    "transparent": true
+  },
+  {
+    "id": "deco-object",
+    "type": "image",
+    "method": "generate",
+    "description": "3D rendered abstract geometric torus knot shape, metallic chrome material, smooth reflective surface, soft studio lighting, minimalist design, floating object",
+    "ratio": "1:1",
+    "output": "assets/deco-object.png",
+    "transparent": true
+  },
+  {
+    "id": "deco-lego",
+    "type": "image",
+    "method": "generate",
+    "description": "3D rendered classic red LEGO brick 2x4 block, glossy plastic material, soft rounded edges, soft shadows, studio lighting, isolated floating object",
+    "ratio": "1:1",
+    "output": "assets/deco-lego.png",
+    "transparent": true
+  },
+  {
+    "id": "deco-group",
+    "type": "image",
+    "method": "generate",
+    "description": "3D rendered cluster of small colorful geometric shapes including spheres cubes and pyramids, varied glossy materials in teal purple and gold, soft studio lighting, floating composition",
+    "ratio": "1:1",
+    "output": "assets/deco-group.png",
+    "transparent": true
+  },
+  {
+    "id": "marquee-1",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a modern dark-themed web application dashboard with data visualization charts, sidebar navigation, analytics cards, and real-time metrics, professional SaaS UI design",
+    "ratio": "3:2",
+    "output": "assets/marquee-1.jpg"
+  },
+  {
+    "id": "marquee-2",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a modern SaaS landing page with hero section, gradient accents, feature grid, call-to-action buttons, clean typography, professional web design",
+    "ratio": "3:2",
+    "output": "assets/marquee-2.jpg"
+  },
+  {
+    "id": "marquee-3",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a fintech web application with stock charts, portfolio overview, trading interface, dark theme with neon green accents, professional financial dashboard",
+    "ratio": "3:2",
+    "output": "assets/marquee-3.jpg"
+  },
+  {
+    "id": "marquee-4",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of an AI-powered application interface with chatbot panel, code generation display, syntax highlighting, dark theme with purple gradient accents",
+    "ratio": "3:2",
+    "output": "assets/marquee-4.jpg"
+  },
+  {
+    "id": "marquee-5",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a social media analytics dashboard with follower growth charts, engagement metrics, content performance cards, modern dark UI with blue accents",
+    "ratio": "3:2",
+    "output": "assets/marquee-5.jpg"
+  },
+  {
+    "id": "marquee-6",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a data transformation pipeline tool with node-based workflow editor, connected blocks, data preview panel, dark theme with orange accents",
+    "ratio": "3:2",
+    "output": "assets/marquee-6.jpg"
+  },
+  {
+    "id": "marquee-7",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a healthcare telemedicine platform with video call interface, patient records sidebar, appointment scheduling, clean white and teal design",
+    "ratio": "3:2",
+    "output": "assets/marquee-7.jpg"
+  },
+  {
+    "id": "marquee-8",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a real estate property listing website with map view, property cards, search filters, modern grid layout, warm color palette",
+    "ratio": "3:2",
+    "output": "assets/marquee-8.jpg"
+  },
+  {
+    "id": "marquee-9",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a flight booking travel website with search form, destination cards, price comparison, blue sky themed hero section, clean modern design",
+    "ratio": "3:2",
+    "output": "assets/marquee-9.jpg"
+  },
+  {
+    "id": "marquee-10",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a crypto Web3 wallet dashboard with token balances, transaction history, NFT gallery, dark theme with gradient purple accents",
+    "ratio": "3:2",
+    "output": "assets/marquee-10.jpg"
+  },
+  {
+    "id": "marquee-11",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of an ecommerce product management admin panel with inventory table, order stats, sales charts, sidebar navigation, clean professional dark UI",
+    "ratio": "3:2",
+    "output": "assets/marquee-11.jpg"
+  },
+  {
+    "id": "marquee-12",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a project management tool with kanban board, task cards, progress bars, team avatars, modern SaaS interface with green accents",
+    "ratio": "3:2",
+    "output": "assets/marquee-12.jpg"
+  },
+  {
+    "id": "marquee-13",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a learning management system with course cards, progress tracking, video player, quiz interface, education-focused modern design",
+    "ratio": "3:2",
+    "output": "assets/marquee-13.jpg"
+  },
+  {
+    "id": "marquee-14",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a music streaming app interface with album artwork grid, now playing bar, playlist sidebar, dark theme with vibrant accent colors",
+    "ratio": "3:2",
+    "output": "assets/marquee-14.jpg"
+  },
+  {
+    "id": "marquee-15",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a restaurant food delivery app with menu cards, cart sidebar, order tracking map, appetizing food photography, warm red and orange accents",
+    "ratio": "3:2",
+    "output": "assets/marquee-15.jpg"
+  },
+  {
+    "id": "marquee-16",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a weather application with current conditions, 7-day forecast, radar map, temperature graphs, clean blue and white design",
+    "ratio": "3:2",
+    "output": "assets/marquee-16.jpg"
+  },
+  {
+    "id": "marquee-17",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a fitness workout tracking app with exercise library, progress charts, workout timer, achievement badges, energetic orange and black design",
+    "ratio": "3:2",
+    "output": "assets/marquee-17.jpg"
+  },
+  {
+    "id": "marquee-18",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a news aggregation platform with article cards, topic filters, trending sidebar, clean reading-focused layout with dark mode",
+    "ratio": "3:2",
+    "output": "assets/marquee-18.jpg"
+  },
+  {
+    "id": "marquee-19",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a design collaboration tool with canvas workspace, comment threads, version history, creative tools palette, modern purple-accented interface",
+    "ratio": "3:2",
+    "output": "assets/marquee-19.jpg"
+  },
+  {
+    "id": "marquee-20",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a video conferencing platform with grid layout, screen sharing, chat panel, participant controls, professional dark gray design",
+    "ratio": "3:2",
+    "output": "assets/marquee-20.jpg"
+  },
+  {
+    "id": "marquee-21",
+    "type": "image",
+    "method": "generate",
+    "description": "Screenshot of a smart home IoT control panel with device cards, room tabs, automation schedules, temperature controls, sleek dark dashboard design",
+    "ratio": "3:2",
+    "output": "assets/marquee-21.jpg"
+  },
+  {
+    "id": "project-tradepro-1",
+    "type": "image",
+    "method": "generate",
+    "description": "Dark-themed AI trading dashboard with real-time candlestick charts, portfolio metrics cards, buy/sell signals panel, neon green and blue data visualizations, professional financial interface",
+    "ratio": "4:3",
+    "output": "assets/project-tradepro-1.jpg"
+  },
+  {
+    "id": "project-tradepro-2",
+    "type": "image",
+    "method": "generate",
+    "description": "Dark-themed AI trading analytics panel showing backtesting results, performance graphs, strategy parameters table, prediction accuracy metrics, purple and blue accents",
+    "ratio": "4:3",
+    "output": "assets/project-tradepro-2.jpg"
+  },
+  {
+    "id": "project-tradepro-3",
+    "type": "image",
+    "method": "generate",
+    "description": "Wide dark-themed AI trading platform full interface showing market overview, watchlist, news feed, order book, and trading panel, professional multi-pane layout with gradient accents",
+    "ratio": "16:9",
+    "output": "assets/project-tradepro-3.jpg"
+  },
+  {
+    "id": "project-pitwall-1",
+    "type": "image",
+    "method": "generate",
+    "description": "Racing telemetry web app showing live race data with speedometer gauges, lap time charts, tire temperature heat map, dark UI with orange and red accents, motorsport dashboard",
+    "ratio": "4:3",
+    "output": "assets/project-pitwall-1.jpg"
+  },
+  {
+    "id": "project-pitwall-2",
+    "type": "image",
+    "method": "generate",
+    "description": "Racing strategy web app with pit stop timing chart, fuel consumption graph, position tracker, weather conditions panel, dark theme with red and white accents",
+    "ratio": "4:3",
+    "output": "assets/project-pitwall-2.jpg"
+  },
+  {
+    "id": "project-pitwall-3",
+    "type": "image",
+    "method": "generate",
+    "description": "Wide racing dashboard full interface with live leaderboard, track map, driver comparison charts, team radio log, dark motorsport-themed multi-panel layout",
+    "ratio": "16:9",
+    "output": "assets/project-pitwall-3.jpg"
+  },
+  {
+    "id": "project-expense-1",
+    "type": "image",
+    "method": "generate",
+    "description": "Clean expense calculator app showing transaction input form with amount field, category dropdown, date picker, add button, minimal white and green design",
+    "ratio": "4:3",
+    "output": "assets/project-expense-1.jpg"
+  },
+  {
+    "id": "project-expense-2",
+    "type": "image",
+    "method": "generate",
+    "description": "Expense calculator summary view with pie chart of spending categories, monthly bar graph, recent transactions list, budget progress ring, clean white design with teal accents",
+    "ratio": "4:3",
+    "output": "assets/project-expense-2.jpg"
+  },
+  {
+    "id": "project-expense-3",
+    "type": "image",
+    "method": "generate",
+    "description": "Wide expense calculator full interface with sidebar navigation, main dashboard showing budget overview, expense breakdown charts, savings goals tracker, clean modern layout",
+    "ratio": "16:9",
+    "output": "assets/project-expense-3.jpg"
+  }
+]
