@@ -1,6 +1,7 @@
 import { FadeIn } from '@/components/FadeIn';
 import { MagneticHover } from '@/components/MagneticHover';
 import { ContactCTA } from '@/components/ContactCTA';
+import { useEffect } from 'react';
 
 const navLinks = [
   { label: 'About', href: '#about' },
@@ -10,6 +11,14 @@ const navLinks = [
 ];
 
 export function HeroSection() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/@splinetool/viewer@1.0.91/build/spline-viewer.js';
+    script.type = 'module';
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const target = document.querySelector(href);
@@ -24,8 +33,14 @@ export function HeroSection() {
       className="relative flex h-screen flex-col justify-between overflow-x-clip"
       style={{ background: '#0C0C0C' }}
     >
+      {/* Background Layer */}
+      <div className="absolute inset-0 z-0 w-full h-full">
+        {/* @ts-ignore */}
+        <spline-viewer url="https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode" style={{ width: '100%', height: '100%' }}></spline-viewer>
+      </div>
+
       {/* Navbar */}
-      <FadeIn delay={0} y={-20} className="w-full flex justify-center">
+      <FadeIn delay={0} y={-20} className="relative z-20 w-full flex justify-center">
         <nav
           className="flex items-center gap-6 sm:gap-10 md:gap-16"
           style={{
@@ -72,13 +87,13 @@ export function HeroSection() {
       </FadeIn>
 
       {/* Portrait - positioned on the right side */}
-      <FadeIn delay={0.6} y={30} className="absolute right-0 z-10 flex justify-end pointer-events-none pr-4" style={{ bottom: '90px' }}>
+      <FadeIn delay={0.6} y={30} className="absolute right-0 z-10 flex justify-end pointer-events-none pr-2 sm:pr-4" style={{ bottom: 'clamp(60px, 10vw, 90px)' }}>
         <MagneticHover
           padding={150}
           strength={3}
           activeTransition="transform 0.3s ease-out"
           inactiveTransition="transform 0.6s ease-in-out"
-          className="w-[320px] sm:w-[420px] md:w-[540px] lg:w-[640px] pointer-events-auto"
+          className="w-[240px] sm:w-[320px] md:w-[420px] lg:w-[540px] xl:w-[640px] pointer-events-auto"
         >
           <img
             src="/assets/portrait-dhruv.jpeg"
@@ -92,20 +107,20 @@ export function HeroSection() {
 
       {/* Bottom bar */}
       <div
-        className="flex items-end justify-between"
+        className="flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6 sm:gap-4"
         style={{
           padding: '0 clamp(1.25rem, 4vw, 2.5rem) clamp(1.75rem, 3vw, 2.5rem)',
         }}
       >
         <FadeIn delay={0.35} y={20}>
           <p
-            className="uppercase text-[#D7E2EA]"
+            className="uppercase text-[#D7E2EA] text-center sm:text-left"
             style={{
               fontWeight: 300,
-              fontSize: 'clamp(0.75rem, 1.4vw, 1.5rem)',
+              fontSize: 'clamp(0.7rem, 1.2vw, 1.2rem)',
               letterSpacing: '0.03em',
               lineHeight: 1.4,
-              maxWidth: '260px',
+              maxWidth: '280px',
               fontFamily: "'Kanit', sans-serif",
             }}
           >

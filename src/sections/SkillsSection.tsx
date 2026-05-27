@@ -47,14 +47,14 @@ export function SkillsSection() {
       {/* Heading */}
       <FadeIn delay={0} y={40}>
         <h2
-          className="text-center font-black uppercase"
+          className="text-center font-black uppercase px-4 md:px-0"
           style={{
             color: '#0C0C0C',
-            fontSize: 'clamp(3rem, 12vw, 160px)',
+            fontSize: 'clamp(2.5rem, 11vw, 160px)',
             lineHeight: 1.0,
             letterSpacing: '-0.02em',
             fontFamily: "'Kanit', sans-serif",
-            marginBottom: 'clamp(4rem, 6vw, 7rem)',
+            marginBottom: 'clamp(2.5rem, 5vw, 7rem)',
           }}
         >
           Skills
@@ -78,23 +78,23 @@ export function SkillsSection() {
                 className="shrink-0 font-black"
                 style={{
                   color: '#0C0C0C',
-                  fontSize: 'clamp(3rem, 10vw, 140px)',
+                  fontSize: 'clamp(2rem, 8vw, 140px)',
                   lineHeight: 1.0,
                   fontFamily: "'Kanit', sans-serif",
-                  minWidth: 'clamp(80px, 12vw, 180px)',
+                  minWidth: 'clamp(60px, 10vw, 180px)',
                 }}
               >
                 {skill.number}
               </span>
 
               {/* Content */}
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1 md:gap-2">
                 <h3
                   className="uppercase"
                   style={{
                     color: '#0C0C0C',
                     fontWeight: 500,
-                    fontSize: 'clamp(1rem, 2.2vw, 2.1rem)',
+                    fontSize: 'clamp(0.95rem, 2vw, 2.1rem)',
                     lineHeight: 1.3,
                     fontFamily: "'Kanit', sans-serif",
                   }}
@@ -106,8 +106,8 @@ export function SkillsSection() {
                     color: '#0C0C0C',
                     opacity: 0.6,
                     fontWeight: 300,
-                    fontSize: 'clamp(0.85rem, 1.6vw, 1.25rem)',
-                    lineHeight: 1.625,
+                    fontSize: 'clamp(0.8rem, 1.4vw, 1.25rem)',
+                    lineHeight: 1.6,
                     maxWidth: '42rem',
                     fontFamily: "'Kanit', sans-serif",
                   }}

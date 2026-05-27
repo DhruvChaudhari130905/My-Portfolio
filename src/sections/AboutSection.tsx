@@ -96,13 +96,13 @@ export function AboutSection() {
         {/* Heading */}
         <FadeIn delay={0} y={40}>
           <h2
-            className="hero-heading text-center font-black uppercase"
+            className="hero-heading text-center font-black uppercase px-4 md:px-0"
             style={{
-              fontSize: 'clamp(3rem, 12vw, 160px)',
+              fontSize: 'clamp(2.5rem, 11vw, 160px)',
               lineHeight: 1.0,
               letterSpacing: '-0.02em',
               fontFamily: "'Kanit', sans-serif",
-              marginBottom: '2.5rem',
+              marginBottom: 'clamp(1.5rem, 3vw, 2.5rem)',
             }}
           >
             About me
