@@ -2,7 +2,7 @@
 
 A modern, interactive portfolio website built with React, TypeScript, and Tailwind CSS. Featuring smooth animations, responsive design, and project showcases with magnetic hover effects.
 
-**[🌐 Live Demo]((https://mybasefolio.netlify.app))** — Visit the live site
+**[🌐 Live Demo][((https://mybasefolio.netlify.app))]** — Visit the live site
 
 ---
 
