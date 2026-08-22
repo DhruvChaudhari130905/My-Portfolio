@@ -7,7 +7,11 @@ import { FooterSection } from '@/sections/FooterSection';
 
 function App() {
   return (
-    <main style={{ overflowX: 'clip', background: '#0C0C0C' }}>
+    <main style={{ 
+      overflowX: 'clip', 
+      background: '#0C0C0C',
+      contain: 'layout style paint',
+    }}>
       <HeroSection />
       <MarqueeSection />
       <AboutSection />
