@@ -2,7 +2,7 @@
 
 A modern, interactive portfolio website built with React, TypeScript, and Tailwind CSS. Featuring smooth animations, responsive design, and project showcases with magnetic hover effects.
 
-**[🌐 Live Demo][((dhruvresum.netlify.app))]** — Visit the live site
+**[🌐 Live Demo][(([dhruvresum.netlify.app](https://dhruvresum.netlify.app)))]** — Visit the live site
 
 ---
 
