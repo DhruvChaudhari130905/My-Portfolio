@@ -1,9 +1,9 @@
 interface LiveProjectButtonProps {
   className?: string;
-  href?: string;
+  href: string;
 }
 
-export function LiveProjectButton({ className = '', href = '#' }: LiveProjectButtonProps) {
+export function LiveProjectButton({ className = '', href }: LiveProjectButtonProps) {
   return (
     <a
       href={href}

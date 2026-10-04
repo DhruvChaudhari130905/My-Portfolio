@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface ScrollCharacterTextProps {
@@ -14,12 +14,22 @@ export function ScrollCharacterText({ text, className = '' }: ScrollCharacterTex
     offset: ['start 0.8', 'end 0.2'],
   });
 
-  // Split by one or more newlines to get paragraphs
-  const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0);
-  
-  // Calculate total characters excluding newlines for animation timing
-  const totalChars = paragraphs.join(' ').length;
-  let charCount = 0;
+  // Precompute each character's global index so render stays pure
+  const { paragraphs, totalChars } = useMemo(() => {
+    let charCount = 0;
+    const paragraphs = text
+      .split(/\n+/)
+      .filter((p) => p.trim().length > 0)
+      .map((paragraph) =>
+        paragraph.split(' ').map((word) => {
+          const chars = word.split('').map((char) => ({ char, index: charCount++ }));
+          // Account for the space between words
+          charCount++;
+          return chars;
+        }),
+      );
+    return { paragraphs, totalChars: Math.max(charCount - 1, 1) };
+  }, [text]);
 
   return (
     <div ref={containerRef} className={className}>
@@ -30,52 +40,35 @@ export function ScrollCharacterText({ text, className = '' }: ScrollCharacterTex
           margin: '0 auto',
         }}
       >
-        {paragraphs.map((paragraph, pIndex) => {
-          const words = paragraph.split(' ');
-          
-          return (
-            <p
-              key={`p-${pIndex}`}
-              className="text-center leading-relaxed"
-              style={{
-                color: '#D7E2EA',
-                fontWeight: 500,
-                fontSize: 'clamp(1rem, 1.8vw, 1.25rem)',
-                lineHeight: 1.625,
-              }}
-            >
-              {words.map((word, wordIndex) => {
-                const chars = word.split('');
-                const wordElement = (
-                  <span key={`word-${wordIndex}`} className="inline-block">
-                    {chars.map((char, charIndex) => {
-                      const index = charCount++;
-                      return (
-                        <Character
-                          key={charIndex}
-                          char={char}
-                          index={index}
-                          total={totalChars}
-                          scrollYProgress={scrollYProgress}
-                        />
-                      );
-                    })}
-                  </span>
-                );
-                
-                // Increment for the space we add between words
-                charCount++;
-                
-                return (
-                  <span key={`group-${wordIndex}`}>
-                    {wordElement}
-                    {wordIndex < words.length - 1 && ' '}
-                  </span>
-                );
-              })}
-            </p>
-          );
-        })}
+        {paragraphs.map((words, pIndex) => (
+          <p
+            key={`p-${pIndex}`}
+            className="text-center leading-relaxed"
+            style={{
+              color: '#D7E2EA',
+              fontWeight: 500,
+              fontSize: 'clamp(1rem, 1.8vw, 1.25rem)',
+              lineHeight: 1.625,
+            }}
+          >
+            {words.map((chars, wordIndex) => (
+              <span key={`group-${wordIndex}`}>
+                <span className="inline-block">
+                  {chars.map(({ char, index }) => (
+                    <Character
+                      key={index}
+                      char={char}
+                      index={index}
+                      total={totalChars}
+                      scrollYProgress={scrollYProgress}
+                    />
+                  ))}
+                </span>
+                {wordIndex < words.length - 1 && ' '}
+              </span>
+            ))}
+          </p>
+        ))}
       </div>
     </div>
   );

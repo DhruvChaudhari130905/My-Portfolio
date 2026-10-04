@@ -1,29 +1,32 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { FadeIn } from '@/components/FadeIn';
+import { RevealText } from '@/components/RevealText';
 import { LiveProjectButton } from '@/components/LiveProjectButton';
 
 const projects = [
   {
     number: '01',
     name: 'TradePro AI',
+    liveUrl: '', // TODO: add the deployed URL
     category: 'Full Stack AI',
-    col1Images: ['/assets/project-tradepro-1.jpg', '/assets/project-tradepro-2.jpg'],
-    col2Image: '/assets/project-tradepro-1.png',
+    col1Images: ['assets/project-tradepro-1.jpg', 'assets/project-tradepro-2.jpg'],
+    col2Image: 'assets/project-tradepro-1.png',
   },
   {
     number: '02',
     name: 'PitWall',
+    liveUrl: '', // TODO: add the deployed URL
     category: 'Web App',
-    col1Images: ['/assets/project-pitwall-1.jpg', '/assets/project-pitwall-2.jpg'],
-    col2Image: '/assets/project-pitwall-3.jpg',
+    col1Images: ['assets/project-pitwall-1.jpg', 'assets/project-pitwall-2.jpg'],
+    col2Image: 'assets/project-pitwall-3.jpg',
   },
   {
     number: '03',
     name: 'Expense Calculator',
+    liveUrl: '', // TODO: add the deployed URL
     category: 'Vanilla JS',
-    col1Images: ['/assets/project-expence-3.png', '/assets/project-expence-2.png'],
-    col2Image: '/assets/project-expense-1.png',
+    col1Images: ['assets/project-expence-3.png', 'assets/project-expence-2.png'],
+    col2Image: 'assets/project-expense-1.png',
   },
 ];
 
@@ -45,6 +48,9 @@ function ProjectCard({
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [1, targetScale]);
+  // Cards being stacked over recede into the dark
+  const dim = useTransform(scrollYProgress, [0, 1], [0, 0.55]);
+  const isLast = index === totalCards - 1;
 
   return (
     <div
@@ -52,13 +58,13 @@ function ProjectCard({
       className="sticky"
       style={{
         top: `clamp(64px, 8vw, 128px)`,
-        height: 'clamp(80vh, 95vh, 100vh)',
+        height: '95vh',
         paddingTop: `${index * 20}px`,
       }}
     >
       <motion.div
         style={{ scale, willChange: 'transform' }}
-        className="flex h-full flex-col"
+        className="relative flex h-full flex-col"
       >
         <div
           className="flex h-full flex-col"
@@ -87,7 +93,7 @@ function ProjectCard({
               {/* Category + Name */}
               <div className="flex flex-col gap-1 min-w-0">
                 <span
-                  className="uppercase text-ellipsis"
+                  className="uppercase"
                   style={{
                     color: '#D7E2EA',
                     fontWeight: 500,
@@ -112,9 +118,11 @@ function ProjectCard({
               </div>
             </div>
 
-            <div className="self-start md:self-auto">
-              <LiveProjectButton />
-            </div>
+            {project.liveUrl && (
+              <div className="self-start md:self-auto">
+                <LiveProjectButton href={project.liveUrl} />
+              </div>
+            )}
           </div>
 
           {/* Image grid */}
@@ -122,7 +130,7 @@ function ProjectCard({
             {/* Left column - 40% */}
             <div className="flex w-[40%] flex-col gap-2 sm:gap-3 lg:gap-4">
               <div
-                className="overflow-hidden"
+                className="group overflow-hidden"
                 style={{
                   borderRadius: 'clamp(12px, 3vw, 40px)',
                   height: 'clamp(80px, 14vw, 230px)',
@@ -131,13 +139,13 @@ function ProjectCard({
                 <img
                   src={project.col1Images[0]}
                   alt={`${project.name} screenshot 1`}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                   loading="lazy"
                   style={{ background: '#1a1a1a' }}
                 />
               </div>
               <div
-                className="flex-1 overflow-hidden"
+                className="group flex-1 overflow-hidden"
                 style={{
                   borderRadius: 'clamp(12px, 3vw, 40px)',
                   minHeight: 'clamp(100px, 18vw, 340px)',
@@ -146,7 +154,7 @@ function ProjectCard({
                 <img
                   src={project.col1Images[1]}
                   alt={`${project.name} screenshot 2`}
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                   loading="lazy"
                   style={{ background: '#1a1a1a' }}
                 />
@@ -155,19 +163,26 @@ function ProjectCard({
 
             {/* Right column - 60% */}
             <div
-              className="w-[60%] overflow-hidden"
+              className="group w-[60%] overflow-hidden"
               style={{ borderRadius: 'clamp(12px, 3vw, 40px)' }}
             >
               <img
                 src={project.col2Image}
                 alt={`${project.name} main screenshot`}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
                 loading="lazy"
                 style={{ background: '#1a1a1a' }}
               />
             </div>
           </div>
         </div>
+        {!isLast && (
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ opacity: dim, background: '#000', borderRadius: 'clamp(20px, 4vw, 60px)' }}
+          />
+        )}
       </motion.div>
     </div>
   );
@@ -185,21 +200,18 @@ export function ProjectsSection() {
         padding: 'clamp(5rem, 8vw, 8rem) clamp(1.25rem, 4vw, 2.5rem)',
       }}
     >
-      {/* Heading */}
-      <FadeIn delay={0} y={40}>
-        <h2
-          className="hero-heading text-center font-black uppercase px-4 md:px-0"
-          style={{
-            fontSize: 'clamp(2.5rem, 11vw, 160px)',
-            lineHeight: 1.0,
-            letterSpacing: '-0.02em',
-            fontFamily: "'Kanit', sans-serif",
-            marginBottom: 'clamp(1.5rem, 3vw, 4rem)',
-          }}
-        >
-          Project
-        </h2>
-      </FadeIn>
+      <RevealText
+        lines={['Projects']}
+        className="text-center font-black uppercase px-4 md:px-0"
+        lineClassName="hero-heading"
+        style={{
+          fontSize: 'clamp(2.5rem, 11vw, 160px)',
+          lineHeight: 1.0,
+          letterSpacing: '-0.02em',
+          fontFamily: "'Kanit', sans-serif",
+          marginBottom: 'clamp(1.5rem, 3vw, 4rem)',
+        }}
+      />
 
       {/* Project cards */}
       <div>

@@ -15,6 +15,17 @@
   * {
     box-sizing: border-box;
   }
+
+  :focus-visible {
+    outline: 2px solid #D7E2EA;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: #B600A8;
+    color: #FFFFFF;
+  }
 }
 
 @layer components {

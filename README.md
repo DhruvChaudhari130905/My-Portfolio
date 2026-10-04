@@ -1,19 +1,21 @@
 # 🚀 Dhruv Chaudhari - Full Stack Developer Portfolio
 
-A modern, interactive portfolio website built with React, TypeScript, and Tailwind CSS. Featuring smooth animations, responsive design, and project showcases with magnetic hover effects.
+A modern, interactive portfolio website built with React, TypeScript, and Tailwind CSS. Featuring smooth animations, responsive design, and scroll-driven project showcases.
 
-**[🌐 Live Demo][(([dhruvresum.netlify.app](https://dhruvresum.netlify.app)))]** — Visit the live site
+**[🌐 Live Demo](https://dhruvresum.netlify.app)** — Visit the live site
 
 ---
 
 ## ✨ Features
 
-- **Interactive Hero Section** - Magnetic hover effect on profile image, stays positioned on right
+- **Interactive Hero Section** - Orchestrated intro: masked headline reveal, portrait unveil and 3D Spline background
+- **Floating Section Nav** - Appears after the hero with an animated active-section indicator and scroll progress bar
+- **Magnetic CTAs** - Contact buttons drift toward the cursor with a light sweep on hover
 - **Smooth Animations** - Fade-in effects, scroll-character text animations, and smooth transitions
 - **Responsive Design** - Fully optimized for mobile, tablet, and desktop devices
 - **Project Showcase** - Sticky card animations with scale effects on scroll
 - **Skills Grid** - Beautiful skills section with organized layout
-- **About Section** - Decorative elements with parallax support
+- **About Section** - Decorative elements with scroll parallax
 - **Contact CTA** - Call-to-action buttons throughout the site
 - **Modern UI** - Gradient text, dark theme, and polished aesthetics
 
@@ -21,7 +23,7 @@ A modern, interactive portfolio website built with React, TypeScript, and Tailwi
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 18 + TypeScript
+- **Frontend**: React 19 + TypeScript
 - **Styling**: Tailwind CSS + PostCSS
 - **Build Tool**: Vite
 - **Animation**: Framer Motion
@@ -33,15 +35,15 @@ A modern, interactive portfolio website built with React, TypeScript, and Tailwi
 ## 📦 Installation
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js (v20 or higher)
 - npm or yarn
 
 ### Setup
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/portfolio.git
-   cd portfolio/app
+   git clone https://github.com/DhruvChaudhari130905/My-Portfolio.git
+   cd My-Portfolio
    ```
 
 2. **Install dependencies**
@@ -65,7 +67,7 @@ A modern, interactive portfolio website built with React, TypeScript, and Tailwi
 ## 📁 Project Structure
 
 ```
-app/
+My-Portfolio/
 ├── src/
 │   ├── components/        # Reusable UI components
 │   │   ├── FadeIn.tsx
@@ -109,8 +111,9 @@ const projects = [
     number: '01',
     name: 'Your Project',
     category: 'Tech Stack',
-    col1Images: ['/assets/image1.jpg', '/assets/image2.jpg'],
-    col2Image: '/assets/image3.jpg',
+    liveUrl: 'https://your-project.example.com', // button is hidden when empty
+    col1Images: ['assets/image1.jpg', 'assets/image2.jpg'],
+    col2Image: 'assets/image3.jpg',
   },
   // Add more projects...
 ];
@@ -197,7 +200,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## 👤 Author
 
 **Dhruv Chaudhari**
-- 🌐 Portfolio: [dhruvresum.netlify.app](https://your-portfolio-url.com)
+- 🌐 Portfolio: [dhruvresum.netlify.app](https://dhruvresum.netlify.app)
 - 💼 LinkedIn: [https://www.linkedin.com/in/dhruv-chaudhari-a49518320/](https://linkedin.com)
 - 🐙 GitHub: [https://github.com/DhruvChaudhari130905](https://github.com)
 - 📧 Email: dhruvchaudhari411@gmail.com
