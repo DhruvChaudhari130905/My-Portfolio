@@ -29,11 +29,83 @@
 }
 
 @layer components {
+  /* Hero composition. Tall screens: name above the figure's head.
+     Wide screens: bigger figure, name crossing behind its chest. */
+  .hero {
+    --fig-h: min(60svh, 125vw);
+    --name-at: 0.92;
+  }
+  @media (min-aspect-ratio: 1/1) {
+    .hero {
+      --fig-h: min(78svh, 150vw);
+      --name-at: 0.42;
+    }
+  }
+
   .hero-heading {
     background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+}
+
+@layer components {
+  /* Project screenshots: sized from the images' real aspect ratios.
+     Parent is an inline-size container; --shots-h is the height left in
+     the viewport once the card's sticky offset, header and padding fit. */
+  .project-shots {
+    container-type: inline-size;
+    --shots-h: calc(100svh - clamp(19rem, 32vw, 29rem));
+  }
+
+  /* Web: 16:9 shots stacked on phones (3 rows -> 0.593),
+     1fr | 2fr grid on larger screens (8:3 overall) */
+  .web-shots {
+    --ratio: 0.593;
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.5rem;
+    width: min(100cqw, var(--shots-h) * var(--ratio));
+    aspect-ratio: var(--ratio);
+  }
+  @media (min-width: 640px) {
+    .web-shots {
+      --ratio: 2.667;
+      grid-template-columns: 1fr 2fr;
+      grid-template-rows: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    .web-shots > :first-child {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+  }
+  @media (min-width: 1024px) {
+    .web-shots { gap: 1rem; }
+  }
+
+  /* Mobile apps: swipeable row of portrait screens on phones,
+     three side by side on larger screens */
+  .phone-shots {
+    --gap: clamp(0.75rem, 4cqw, 3rem);
+    display: flex;
+    gap: var(--gap);
+    max-width: 100cqw;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .phone-shots::-webkit-scrollbar { display: none; }
+  .phone-shot {
+    flex-shrink: 0;
+    aspect-ratio: 718 / 1498;
+    height: min(var(--shots-h), 60cqw / 0.479);
+    scroll-snap-align: center;
+  }
+  @media (min-width: 640px) {
+    .phone-shots { overflow-x: visible; }
+    .phone-shot { height: min(var(--shots-h), (100cqw - 2 * var(--gap)) / 3 / 0.479); }
   }
 }
 

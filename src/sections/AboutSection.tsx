@@ -17,10 +17,10 @@ When I’m not coding, you’ll probably find me exploring new technologies, lea
 My goal? To build technology that feels smart, useful, and unforgettable.`;
 
 const decorations = [
-  { src: 'assets/deco-moon.png', from: -80, delay: 0.1, speed: 90, spin: -8, style: { top: '4%', left: '3%' }, size: 'w-[120px] sm:w-[160px] md:w-[210px]' },
-  { src: 'assets/deco-object.png', from: -80, delay: 0.25, speed: -60, spin: 12, style: { bottom: '8%', left: '6%' }, size: 'w-[100px] sm:w-[140px] md:w-[180px]' },
-  { src: 'assets/deco-lego.png', from: 80, delay: 0.15, speed: 120, spin: 6, style: { top: '4%', right: '3%' }, size: 'w-[120px] sm:w-[160px] md:w-[210px]' },
-  { src: 'assets/deco-group.png', from: 80, delay: 0.3, speed: -80, spin: -10, style: { bottom: '8%', right: '6%' }, size: 'w-[130px] sm:w-[170px] md:w-[220px]' },
+  { src: 'assets/deco-moon.webp', top: true, from: -80, delay: 0.1, speed: 90, spin: -8, style: { top: '4%', left: '3%' }, size: 'w-[120px] sm:w-[160px] md:w-[210px]' },
+  { src: 'assets/deco-object.webp', from: -80, delay: 0.25, speed: -60, spin: 12, style: { bottom: '8%', left: '6%' }, size: 'w-[100px] sm:w-[140px] md:w-[180px]' },
+  { src: 'assets/deco-lego.webp', top: true, from: 80, delay: 0.15, speed: 120, spin: 6, style: { top: '4%', right: '3%' }, size: 'w-[120px] sm:w-[160px] md:w-[210px]' },
+  { src: 'assets/deco-group.webp', from: 80, delay: 0.3, speed: -80, spin: -10, style: { bottom: '8%', right: '6%' }, size: 'w-[130px] sm:w-[170px] md:w-[220px]' },
 ];
 
 // Each decoration drifts at its own speed for depth
@@ -38,7 +38,8 @@ function Decoration({
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none absolute z-0"
+      // Top pieces would sit on the heading on phones
+      className={`pointer-events-none absolute z-0 ${deco.top ? 'hidden sm:block' : ''}`}
       style={{ ...(deco.style as CSSProperties), y, rotate }}
     >
       <FadeIn delay={deco.delay} x={deco.from} y={0} duration={0.9}>
@@ -80,7 +81,6 @@ export function AboutSection() {
             lineHeight: 1.0,
             letterSpacing: '-0.02em',
             fontFamily: "'Kanit', sans-serif",
-            marginBottom: 'clamp(1.5rem, 3vw, 2.5rem)',
           }}
         />
 

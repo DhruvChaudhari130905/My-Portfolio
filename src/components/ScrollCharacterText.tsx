@@ -6,6 +6,8 @@ interface ScrollCharacterTextProps {
   className?: string;
 }
 
+// Lights the text up word by word as it scrolls through the viewport.
+// One animated node per word (not per character) keeps the bio cheap to render.
 export function ScrollCharacterText({ text, className = '' }: ScrollCharacterTextProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -14,21 +16,16 @@ export function ScrollCharacterText({ text, className = '' }: ScrollCharacterTex
     offset: ['start 0.8', 'end 0.2'],
   });
 
-  // Precompute each character's global index so render stays pure
-  const { paragraphs, totalChars } = useMemo(() => {
-    let charCount = 0;
+  // Precompute each word's global index so render stays pure
+  const { paragraphs, totalWords } = useMemo(() => {
+    let wordCount = 0;
     const paragraphs = text
       .split(/\n+/)
       .filter((p) => p.trim().length > 0)
       .map((paragraph) =>
-        paragraph.split(' ').map((word) => {
-          const chars = word.split('').map((char) => ({ char, index: charCount++ }));
-          // Account for the space between words
-          charCount++;
-          return chars;
-        }),
+        paragraph.split(' ').map((word) => ({ word, index: wordCount++ })),
       );
-    return { paragraphs, totalChars: Math.max(charCount - 1, 1) };
+    return { paragraphs, totalWords: Math.max(wordCount, 1) };
   }, [text]);
 
   return (
@@ -51,19 +48,14 @@ export function ScrollCharacterText({ text, className = '' }: ScrollCharacterTex
               lineHeight: 1.625,
             }}
           >
-            {words.map((chars, wordIndex) => (
-              <span key={`group-${wordIndex}`}>
-                <span className="inline-block">
-                  {chars.map(({ char, index }) => (
-                    <Character
-                      key={index}
-                      char={char}
-                      index={index}
-                      total={totalChars}
-                      scrollYProgress={scrollYProgress}
-                    />
-                  ))}
-                </span>
+            {words.map(({ word, index }, wordIndex) => (
+              <span key={index}>
+                <Word
+                  word={word}
+                  index={index}
+                  total={totalWords}
+                  scrollYProgress={scrollYProgress}
+                />
                 {wordIndex < words.length - 1 && ' '}
               </span>
             ))}
@@ -74,32 +66,18 @@ export function ScrollCharacterText({ text, className = '' }: ScrollCharacterTex
   );
 }
 
-interface CharacterProps {
-  char: string;
+interface WordProps {
+  word: string;
   index: number;
   total: number;
   scrollYProgress: ReturnType<typeof useScroll>['scrollYProgress'];
 }
 
-function Character({ char, index, total, scrollYProgress }: CharacterProps) {
+function Word({ word, index, total, scrollYProgress }: WordProps) {
   const start = index / total;
   const end = (index + 1) / total;
 
   const opacity = useTransform(scrollYProgress, [start, end], [0.2, 1]);
 
-  return (
-    <span style={{ position: 'relative', display: 'inline' }}>
-      <span style={{ visibility: 'hidden' }}>{char === ' ' ? '\u00A0' : char}</span>
-      <motion.span
-        style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          opacity,
-        }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </motion.span>
-    </span>
-  );
+  return <motion.span style={{ opacity }}>{word}</motion.span>;
 }

@@ -31,7 +31,7 @@ export function FadeIn({
         ease: [0.25, 0.1, 0.25, 1],
       }}
       className={className}
-      style={{ willChange: 'transform, opacity', ...style }}
+      style={style}
     >
       {children}
     </motion.div>

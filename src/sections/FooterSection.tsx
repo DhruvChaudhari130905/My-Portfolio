@@ -1,14 +1,16 @@
 import { ArrowUp, Github, Linkedin, Mail } from 'lucide-react';
+import { CopyEmailButton } from '@/components/CopyEmailButton';
 import { FadeIn } from '@/components/FadeIn';
+import { RecentRepos } from '@/components/RecentRepos';
 import { RevealText } from '@/components/RevealText';
+import { GITHUB_URL } from '@/lib/github';
 import { scrollToSection } from '@/lib/nav';
 
-// TODO: replace with your real LinkedIn profile and email address
-const LINKEDIN_URL = 'https://linkedin.com';
-const EMAIL = 'dhruv@example.com';
+const LINKEDIN_URL = 'https://www.linkedin.com/in/dhruv-chaudhari-a49518320/';
+const EMAIL = 'dhruvchaudhari411@gmail.com';
 
 const socials = [
-  { label: 'GitHub', href: 'https://github.com/DhruvChaudhari130905', Icon: Github, external: true },
+  { label: 'GitHub', href: GITHUB_URL, Icon: Github, external: true },
   { label: 'LinkedIn', href: LINKEDIN_URL, Icon: Linkedin, external: true },
   { label: 'Email', href: `mailto:${EMAIL}`, Icon: Mail, external: false },
 ];
@@ -20,7 +22,7 @@ export function FooterSection() {
       className="relative z-10 w-full"
       style={{
         background: '#0C0C0C',
-        padding: 'clamp(4rem, 8vw, 8rem) clamp(1.25rem, 4vw, 2.5rem) clamp(2rem, 4vw, 3rem)',
+        padding: 'clamp(3rem, 5vw, 5rem) clamp(1.25rem, 4vw, 2.5rem) clamp(2rem, 4vw, 3rem)',
         fontFamily: "'Kanit', sans-serif",
       }}
     >
@@ -52,7 +54,7 @@ export function FooterSection() {
             Always excited to discuss new projects, collaborations, and opportunities to build something great together.
           </p>
 
-          <div className="mb-12 flex items-center gap-3 sm:mb-16 sm:gap-4">
+          <div className="mb-12 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
             {socials.map(({ label, href, Icon, external }) => (
               <a
                 key={label}
@@ -66,6 +68,11 @@ export function FooterSection() {
                 <span className="hidden sm:inline">{label}</span>
               </a>
             ))}
+            <CopyEmailButton email={EMAIL} />
+          </div>
+
+          <div className="mb-12 flex w-full justify-center sm:mb-16">
+            <RecentRepos />
           </div>
 
           <div

@@ -15,36 +15,42 @@ const content: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, delay: 0.15, ease: EASE_OUT_EXPO } },
 };
 
+// Tags pop in one after another once the row's text has settled
+const tagList: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.05, delayChildren: 0.35 } },
+};
+
+const tag: Variants = {
+  hidden: { opacity: 0, y: 10, scale: 0.92 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: EASE_OUT_EXPO } },
+};
+
 const skills = [
   {
-    number: '01',
-    title: 'Frontend Development',
-    description:
-      'Next.js, React.js, TypeScript, Tailwind CSS, HTML5, CSS3. Building responsive UIs and performant web apps.',
+    title: 'Frontend development',
+    summary: 'Responsive interfaces and fast, accessible web apps.',
+    tools: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'HTML5', 'CSS3'],
   },
   {
-    number: '02',
-    title: 'Backend Engineering',
-    description:
-      'Node.js, Express.js, Python (Django, Flask, FastAPI). Architecting robust APIs and server-side logic.',
+    title: 'Backend engineering',
+    summary: 'APIs and server-side logic that hold up under real traffic.',
+    tools: ['Node.js', 'Express', 'Python', 'Django', 'Flask', 'FastAPI'],
   },
   {
-    number: '03',
-    title: 'Database Management',
-    description:
-      'PostgreSQL (PL/pgSQL), MongoDB, SQLite, Supabase. Designing efficient schemas and managing state.',
+    title: 'Databases',
+    summary: 'Efficient schemas, queries and state management.',
+    tools: ['PostgreSQL', 'PL/pgSQL', 'MongoDB', 'SQLite', 'Supabase'],
   },
   {
-    number: '04',
-    title: 'AI & Machine Learning',
-    description:
-      'scikit-learn, TensorFlow, Keras, OpenCV, pandas, NumPy, MLflow. Applying machine learning models and data processing.',
+    title: 'AI & machine learning',
+    summary: 'Training, evaluating and shipping models with clean data pipelines.',
+    tools: ['scikit-learn', 'TensorFlow', 'Keras', 'OpenCV', 'pandas', 'NumPy', 'MLflow'],
   },
   {
-    number: '05',
-    title: 'DevOps & Tools',
-    description:
-      'Docker, GitHub Actions, Vercel, Netlify, Git, Linux, Figma, Postman. Streamlining deployment pipelines and workflows.',
+    title: 'DevOps & tools',
+    summary: 'Deployment pipelines and day-to-day workflow.',
+    tools: ['Docker', 'GitHub Actions', 'Vercel', 'Netlify', 'Git', 'Linux', 'Figma', 'Postman'],
   },
 ];
 
@@ -57,6 +63,7 @@ export function SkillsSection() {
         background: '#FFFFFF',
         borderRadius: 'clamp(40px, 5vw, 60px) clamp(40px, 5vw, 60px) 0 0',
         padding: 'clamp(5rem, 8vw, 8rem) clamp(1.25rem, 4vw, 2.5rem)',
+        fontFamily: "'Kanit', sans-serif",
       }}
     >
       <RevealText
@@ -67,16 +74,15 @@ export function SkillsSection() {
           fontSize: 'clamp(2.5rem, 11vw, 160px)',
           lineHeight: 1.0,
           letterSpacing: '-0.02em',
-          fontFamily: "'Kanit', sans-serif",
-          marginBottom: 'clamp(2.5rem, 5vw, 7rem)',
+          marginBottom: 'clamp(2.5rem, 5vw, 6rem)',
         }}
       />
 
       {/* Skills list */}
-      <div className="mx-auto" style={{ maxWidth: '64rem' }}>
+      <div className="mx-auto" style={{ maxWidth: '68rem' }}>
         {skills.map((skill, i) => (
           <motion.div
-            key={skill.number}
+            key={skill.title}
             className="group relative"
             initial="hidden"
             whileInView="visible"
@@ -99,48 +105,53 @@ export function SkillsSection() {
 
             <motion.div variants={content}>
               <div
-                className="flex flex-col gap-4 transition-transform duration-500 ease-out sm:flex-row sm:items-start sm:gap-8 sm:group-hover:translate-x-4"
-                style={{ padding: 'clamp(2rem, 3vw, 3rem) 0' }}
+                className="grid gap-4 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-baseline md:gap-10"
+                style={{ padding: 'clamp(1.75rem, 3vw, 2.75rem) 0' }}
               >
-                {/* Number */}
-                <span
-                  className="shrink-0 font-black text-[#0C0C0C] transition-colors duration-500 group-hover:text-[#7621B0]"
+                <h3
+                  className="text-[#0C0C0C] transition-colors duration-500 group-hover:text-[#7621B0]"
                   style={{
-                    fontSize: 'clamp(2rem, 8vw, 140px)',
-                    lineHeight: 1.0,
-                    fontFamily: "'Kanit', sans-serif",
-                    minWidth: 'clamp(60px, 10vw, 180px)',
+                    fontWeight: 700,
+                    fontSize: 'clamp(1.5rem, 3vw, 2.6rem)',
+                    lineHeight: 1.1,
+                    letterSpacing: '-0.01em',
                   }}
                 >
-                  {skill.number}
-                </span>
+                  {skill.title}
+                </h3>
 
-                {/* Content */}
-                <div className="flex flex-col gap-1 md:gap-2">
-                  <h3
-                    className="uppercase"
-                    style={{
-                      color: '#0C0C0C',
-                      fontWeight: 500,
-                      fontSize: 'clamp(0.95rem, 2vw, 2.1rem)',
-                      lineHeight: 1.3,
-                      fontFamily: "'Kanit', sans-serif",
-                    }}
+                <div className="flex flex-col gap-3">
+                  <motion.ul
+                    variants={tagList}
+                    className="flex flex-wrap gap-2"
+                    aria-label={`${skill.title} tools`}
                   >
-                    {skill.title}
-                  </h3>
+                    {skill.tools.map((tool) => (
+                      <motion.li
+                        key={tool}
+                        variants={tag}
+                        whileHover={{ y: -3 }}
+                        className="rounded-full border-[rgba(12,12,12,0.15)] px-3 py-1 text-[#0C0C0C] transition-colors duration-200 hover:border-[#7621B0] hover:text-[#7621B0]"
+                        style={{
+                          borderWidth: 1,
+                          fontSize: 'clamp(0.85rem, 1.1vw, 1rem)',
+                          fontWeight: 400,
+                        }}
+                      >
+                        {tool}
+                      </motion.li>
+                    ))}
+                  </motion.ul>
                   <p
                     style={{
                       color: '#0C0C0C',
                       opacity: 0.6,
                       fontWeight: 300,
-                      fontSize: 'clamp(0.8rem, 1.4vw, 1.25rem)',
+                      fontSize: 'clamp(0.95rem, 1.3vw, 1.15rem)',
                       lineHeight: 1.6,
-                      maxWidth: '42rem',
-                      fontFamily: "'Kanit', sans-serif",
                     }}
                   >
-                    {skill.description}
+                    {skill.summary}
                   </p>
                 </div>
               </div>

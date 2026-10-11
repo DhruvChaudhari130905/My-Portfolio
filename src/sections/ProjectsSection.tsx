@@ -1,41 +1,166 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, type PointerEvent, type ReactNode } from 'react';
+import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { RevealText } from '@/components/RevealText';
 import { LiveProjectButton } from '@/components/LiveProjectButton';
+import { useGitHubRepos } from '@/hooks/useGitHubRepos';
+import { useNow } from '@/hooks/useNow';
+import { timeAgo } from '@/lib/github';
 
-const projects = [
+type Platform = 'web' | 'mobile';
+
+interface Project {
+  number: string;
+  name: string;
+  liveUrl: string;
+  category: string;
+  platform: Platform;
+  /** web: [main, side, side] 16:9 screenshots; mobile: three portrait phone screens */
+  images: [string, string, string];
+}
+
+const projects: Project[] = [
   {
     number: '01',
-    name: 'TradePro AI',
+    name: 'MUX',
     liveUrl: '', // TODO: add the deployed URL
-    category: 'Full Stack AI',
-    col1Images: ['assets/project-tradepro-1.jpg', 'assets/project-tradepro-2.jpg'],
-    col2Image: 'assets/project-tradepro-1.png',
+    category: 'Data Processing',
+    platform: 'web',
+    images: ['assets/project-mux-3.webp', 'assets/project-mux-1.webp', 'assets/project-mux-2.webp'],
   },
   {
     number: '02',
-    name: 'PitWall',
+    name: 'TradePro AI',
     liveUrl: '', // TODO: add the deployed URL
-    category: 'Web App',
-    col1Images: ['assets/project-pitwall-1.jpg', 'assets/project-pitwall-2.jpg'],
-    col2Image: 'assets/project-pitwall-3.jpg',
+    category: 'Full Stack AI',
+    platform: 'web',
+    images: ['assets/project-tradepro-1.webp', 'assets/project-tradepro-1-jpg.webp', 'assets/project-tradepro-2-jpg.webp'],
   },
   {
     number: '03',
+    name: 'Navguard',
+    liveUrl: '', // TODO: add the deployed URL
+    category: 'Mobile App · Navigation',
+    platform: 'mobile',
+    images: ['assets/project-navguard-1.webp', 'assets/project-navguard-2.webp', 'assets/project-navguard-3.webp'],
+  },
+  {
+    number: '04',
+    name: 'Resqmesh',
+    liveUrl: '', // TODO: add the deployed URL
+    category: 'Mobile App · Emergency Response',
+    platform: 'mobile',
+    images: ['assets/project-resqmesh-1.webp', 'assets/project-resqmesh-2.webp', 'assets/project-resqmesh-3.webp'],
+  },
+  {
+    number: '05',
     name: 'Expense Calculator',
     liveUrl: '', // TODO: add the deployed URL
     category: 'Vanilla JS',
-    col1Images: ['assets/project-expence-3.png', 'assets/project-expence-2.png'],
-    col2Image: 'assets/project-expense-1.png',
+    platform: 'web',
+    images: ['assets/project-expense-1.webp', 'assets/project-expense-3.webp', 'assets/project-expense-2.webp'],
   },
 ];
+
+const SHOT_RADIUS = 'clamp(10px, 2.5vw, 32px)';
+const IMG_CLASS =
+  'h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04]';
+
+// Layout and sizing live in .web-shots / .phone-shots (index.css)
+function WebShots({ project }: { project: Project }) {
+  return (
+    <div className="web-shots">
+      {project.images.map((src, i) => (
+        <div key={src} className="group overflow-hidden" style={{ borderRadius: SHOT_RADIUS }}>
+          <img
+            src={src}
+            alt={`${project.name} screenshot ${i + 1}`}
+            className={IMG_CLASS}
+            loading="lazy"
+            style={{ background: '#1a1a1a' }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PhoneShots({ project }: { project: Project }) {
+  return (
+    <div className="phone-shots">
+      {project.images.map((src, i) => (
+        <div
+          key={src}
+          className="phone-shot group overflow-hidden"
+          // Screenshots are trimmed to the device bezel; match its corner curve
+          style={{ borderRadius: '17% / 8.2%' }}
+        >
+          <img src={src} alt={`${project.name} screen ${i + 1}`} className={IMG_CLASS} loading="lazy" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Screenshots lean a few degrees toward the cursor
+function TiltShots({ children }: { children: ReactNode }) {
+  const reduce = useReducedMotion();
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const rotateY = useSpring(useTransform(px, [-0.5, 0.5], [-5, 5]), { stiffness: 150, damping: 18 });
+  const rotateX = useSpring(useTransform(py, [-0.5, 0.5], [4, -4]), { stiffness: 150, damping: 18 });
+
+  const onMove = (e: PointerEvent<HTMLDivElement>) => {
+    if (reduce || e.pointerType !== 'mouse') return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    px.set((e.clientX - rect.left) / rect.width - 0.5);
+    py.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+  const onLeave = () => {
+    px.set(0);
+    py.set(0);
+  };
+
+  return (
+    <motion.div
+      onPointerMove={onMove}
+      onPointerLeave={onLeave}
+      style={{ rotateX, rotateY, transformPerspective: 1400 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// Live "last updated" from the project's GitHub repo, when one matches by name
+function RepoActivity({ name }: { name: string }) {
+  const repos = useGitHubRepos();
+  const now = useNow();
+  const repo = repos?.find((r) => r.name.toLowerCase() === name.toLowerCase());
+  if (!repo) return null;
+
+  return (
+    <a
+      href={repo.html_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex w-fit items-center gap-2 text-[#D7E2EA] opacity-70 transition-opacity duration-200 hover:opacity-100"
+      style={{ fontSize: 'clamp(0.75rem, 0.9vw, 0.875rem)', fontWeight: 300 }}
+    >
+      <span className="relative flex h-1.5 w-1.5" aria-hidden>
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#3DDC84] opacity-75 motion-reduce:hidden" />
+        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#3DDC84]" />
+      </span>
+      Updated {timeAgo(repo.pushed_at, now)} on GitHub
+    </a>
+  );
+}
 
 function ProjectCard({
   project,
   index,
   totalCards,
 }: {
-  project: (typeof projects)[0];
+  project: Project;
   index: number;
   totalCards: number;
 }) {
@@ -58,16 +183,17 @@ function ProjectCard({
       className="sticky"
       style={{
         top: `clamp(64px, 8vw, 128px)`,
-        height: '95vh',
+        // Spacing between stacked cards; the last one only needs its own height
+        height: isLast ? 'auto' : '95vh',
         paddingTop: `${index * 20}px`,
       }}
     >
       <motion.div
         style={{ scale, willChange: 'transform' }}
-        className="relative flex h-full flex-col"
+        className="relative flex flex-col"
       >
         <div
-          className="flex h-full flex-col"
+          className="flex flex-col"
           style={{
             background: '#0C0C0C',
             border: '2px solid #D7E2EA',
@@ -115,6 +241,7 @@ function ProjectCard({
                 >
                   {project.name}
                 </span>
+                <RepoActivity name={project.name} />
               </div>
             </div>
 
@@ -125,55 +252,11 @@ function ProjectCard({
             )}
           </div>
 
-          {/* Image grid */}
-          <div className="flex flex-1 gap-2 sm:gap-3 lg:gap-4 overflow-hidden">
-            {/* Left column - 40% */}
-            <div className="flex w-[40%] flex-col gap-2 sm:gap-3 lg:gap-4">
-              <div
-                className="group overflow-hidden"
-                style={{
-                  borderRadius: 'clamp(12px, 3vw, 40px)',
-                  height: 'clamp(80px, 14vw, 230px)',
-                }}
-              >
-                <img
-                  src={project.col1Images[0]}
-                  alt={`${project.name} screenshot 1`}
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                  loading="lazy"
-                  style={{ background: '#1a1a1a' }}
-                />
-              </div>
-              <div
-                className="group flex-1 overflow-hidden"
-                style={{
-                  borderRadius: 'clamp(12px, 3vw, 40px)',
-                  minHeight: 'clamp(100px, 18vw, 340px)',
-                }}
-              >
-                <img
-                  src={project.col1Images[1]}
-                  alt={`${project.name} screenshot 2`}
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                  loading="lazy"
-                  style={{ background: '#1a1a1a' }}
-                />
-              </div>
-            </div>
-
-            {/* Right column - 60% */}
-            <div
-              className="group w-[60%] overflow-hidden"
-              style={{ borderRadius: 'clamp(12px, 3vw, 40px)' }}
-            >
-              <img
-                src={project.col2Image}
-                alt={`${project.name} main screenshot`}
-                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                loading="lazy"
-                style={{ background: '#1a1a1a' }}
-              />
-            </div>
+          {/* Screenshots, sized to fit the viewport without cropping */}
+          <div className="project-shots flex justify-center">
+            <TiltShots>
+              {project.platform === 'mobile' ? <PhoneShots project={project} /> : <WebShots project={project} />}
+            </TiltShots>
           </div>
         </div>
         {!isLast && (

@@ -1,6 +1,7 @@
-import { motion } from "framer-motion";
-import { useEffect } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useEffect, useState } from "react";
 import { ContactCTA } from "@/components/ContactCTA";
+import { LiveStatus } from "@/components/LiveStatus";
 import { MagneticHover } from "@/components/MagneticHover";
 import { RevealText } from "@/components/RevealText";
 import { EASE_OUT_EXPO } from "@/lib/motion";
@@ -14,8 +15,8 @@ const T = {
   backdrop: 0,
   nav: 0.1,
   heading: 0.25,
-  portrait: 0.55,
-  footer: 0.95,
+  figure: 0.6,
+  footer: 1.0,
 };
 
 const rise = (delay: number) => ({
@@ -24,25 +25,55 @@ const rise = (delay: number) => ({
   transition: { duration: 0.8, delay, ease: EASE_OUT_EXPO },
 });
 
+// The 3D scene is heavy: only load it on larger screens without reduced motion
+const SPLINE_QUERY = "(min-width: 768px) and (prefers-reduced-motion: no-preference)";
+// Pointer parallax only makes sense with a mouse
+const PARALLAX_QUERY = "(pointer: fine) and (prefers-reduced-motion: no-preference)";
+
 export function HeroSection() {
+  const [showSpline] = useState(() => window.matchMedia(SPLINE_QUERY).matches);
+
+  // Pointer position, -0.5..0.5 from the viewport centre
+  const pointerX = useMotionValue(0);
+  const pointerY = useMotionValue(0);
+  const smoothX = useSpring(pointerX, { stiffness: 60, damping: 20 });
+  const smoothY = useSpring(pointerY, { stiffness: 60, damping: 20 });
+  // Name and figure drift in opposite directions for depth
+  const nameX = useTransform(smoothX, (v) => v * -28);
+  const nameY = useTransform(smoothY, (v) => v * -12);
+  const figureX = useTransform(smoothX, (v) => v * 36);
+  const figureY = useTransform(smoothY, (v) => v * 14);
+
   useEffect(() => {
+    if (!showSpline) return;
     if (document.querySelector(`script[src="${SPLINE_VIEWER_SRC}"]`)) return;
     const script = document.createElement("script");
     script.src = SPLINE_VIEWER_SRC;
     script.type = "module";
     document.body.appendChild(script);
-  }, []);
+  }, [showSpline]);
+
+  useEffect(() => {
+    if (!window.matchMedia(PARALLAX_QUERY).matches) return;
+    const onMove = (e: PointerEvent) => {
+      pointerX.set(e.clientX / window.innerWidth - 0.5);
+      pointerY.set(e.clientY / window.innerHeight - 0.5);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [pointerX, pointerY]);
 
   return (
     <section
       id="hero"
-      className="relative flex h-screen flex-col justify-between overflow-x-clip"
+      // .hero sets --fig-h / --name-at (index.css): the figure's height drives the layout
+      className="hero relative flex h-[100svh] flex-col justify-between overflow-hidden"
       style={{
         background: "#0C0C0C",
         contain: "layout style",
       }}
     >
-      {/* Background Layer */}
+      {/* Background Layer, dimmed so the name and figure lead */}
       <motion.div
         className="absolute inset-0 z-0 w-full h-full"
         style={{
@@ -50,22 +81,32 @@ export function HeroSection() {
           pointerEvents: "none",
         }}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: 0.5 }}
         transition={{ duration: 1.6, delay: T.backdrop, ease: "easeOut" }}
       >
-        <spline-viewer
-          url="https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode"
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "block",
-          }}
-        ></spline-viewer>
+        {showSpline ? (
+          <spline-viewer
+            url="https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode"
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "block",
+            }}
+          ></spline-viewer>
+        ) : (
+          <div
+            className="h-full w-full"
+            style={{
+              background:
+                "radial-gradient(ellipse at 70% 30%, rgba(118, 33, 176, 0.5), transparent 60%), radial-gradient(ellipse at 20% 70%, rgba(182, 0, 168, 0.3), transparent 55%)",
+            }}
+          />
+        )}
       </motion.div>
 
       {/* Navbar */}
       <motion.div
-        className="relative z-20 w-full flex justify-center"
+        className="relative z-30 w-full flex justify-center"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: T.nav, ease: EASE_OUT_EXPO }}
@@ -103,73 +144,111 @@ export function HeroSection() {
         </nav>
       </motion.div>
 
-      {/* Hero Heading */}
-      <div className="w-full relative z-20 flex justify-start overflow-visible">
+      {/* Name, behind the figure: across its chest on wide screens, above its head on tall ones */}
+      <motion.div
+        className="pointer-events-none absolute inset-x-0 z-10 flex justify-center"
+        style={{ bottom: "calc(var(--fig-h) * var(--name-at))", x: nameX, y: nameY }}
+      >
         <RevealText
           as="h1"
           trigger="mount"
           delay={T.heading}
           stagger={0.14}
-          lines={["Hi, i'm", "Dhruv"]}
-          className="font-black uppercase text-left"
+          lines={[
+            <span
+              style={{
+                fontSize: "clamp(1.1rem, 2.2vw, 2.2rem)",
+                fontWeight: 400,
+                letterSpacing: "0.01em",
+                lineHeight: 1.4,
+              }}
+            >
+              Hi, I'm
+            </span>,
+            "DHRUV",
+          ]}
+          className="whitespace-nowrap text-left font-black"
           lineClassName="hero-heading"
           style={{
-            fontSize: "clamp(3.5rem, 11vw, 13rem)",
-            letterSpacing: "-0.02em",
-            lineHeight: 0.85,
-            marginTop: "clamp(2rem, 10vh, 6rem)",
-            marginBottom: "clamp(7rem, 20vh, 24rem)",
-            padding: "0 clamp(1.25rem, 5vw, 4rem)",
+            fontSize: "min(27vw, 38svh)",
+            letterSpacing: "-0.03em",
+            lineHeight: 0.8,
             fontFamily: "'Kanit', sans-serif",
           }}
         />
-      </div>
+      </motion.div>
 
-      {/* Portrait - unmasked from the bottom while settling from a slight zoom */}
-      <div
-        className="absolute right-0 bottom-[170px] z-10 flex justify-end pr-2 sm:bottom-[clamp(120px,20vw,160px)] sm:pr-4"
-      >
-        <motion.div
-          className="w-[260px] sm:w-[320px] md:w-[420px] lg:w-[540px] xl:w-[640px] overflow-hidden"
-          style={{ borderRadius: "1rem" }}
-          initial={{ clipPath: "inset(100% 0% 0% 0% round 1rem)" }}
-          animate={{ clipPath: "inset(0% 0% 0% 0% round 1rem)" }}
-          transition={{ duration: 1.2, delay: T.portrait, ease: EASE_OUT_EXPO }}
-        >
+      {/* Back light that lifts the figure off the dark background */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 z-[15] -translate-x-1/2 rounded-full"
+        style={{
+          bottom: "calc(var(--fig-h) * 0.15)",
+          width: "calc(var(--fig-h) * 1.1)",
+          height: "calc(var(--fig-h) * 0.9)",
+          background:
+            "radial-gradient(closest-side, rgba(182, 0, 168, 0.38), rgba(118, 33, 176, 0.22) 55%, transparent)",
+          filter: "blur(20px)",
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.6, delay: T.figure, ease: "easeOut" }}
+      />
+
+      {/* Figure, in front of the name */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center">
+        <motion.div style={{ x: figureX, y: figureY }}>
           <motion.img
-            src="assets/portrait-dhruv.jpeg"
-            alt="Dhruv Chaudhari - Full Stack Developer"
-            className="block h-auto w-full object-cover"
+            src="assets/dhruv-cutout.webp"
+            alt="Illustration of Dhruv Chaudhari in a hoodie and blazer"
+            className="block w-auto max-w-none"
+            style={{
+              height: "var(--fig-h)",
+              // Soften the flat crop at the legs
+              maskImage: "linear-gradient(to top, transparent, #000 22%)",
+              WebkitMaskImage: "linear-gradient(to top, transparent, #000 22%)",
+              filter: "drop-shadow(0 0 28px rgba(118, 33, 176, 0.35))",
+            }}
             loading="eager"
-            initial={{ scale: 1.2 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 1.8, delay: T.portrait, ease: EASE_OUT_EXPO }}
+            initial={{ opacity: 0, y: 80 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.3, delay: T.figure, ease: EASE_OUT_EXPO }}
           />
         </motion.div>
       </div>
 
+      {/* Keeps the tagline and button legible over the figure */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[25] h-[36%] sm:h-[22%]"
+        style={{ background: "linear-gradient(to top, #0C0C0C 25%, transparent)" }}
+      />
+
       {/* Bottom bar */}
       <div
-        className="relative z-20 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6 sm:gap-4"
+        className="relative z-30 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-5 sm:gap-4"
         style={{
           padding: "0 clamp(1.25rem, 4vw, 2.5rem) clamp(1.75rem, 3vw, 2.5rem)",
         }}
       >
-        <motion.p
+        <motion.div
           {...rise(T.footer)}
-          className="uppercase text-[#D7E2EA] text-center sm:text-left"
-          style={{
-            fontWeight: 300,
-            fontSize: "clamp(0.7rem, 1.2vw, 1.2rem)",
-            letterSpacing: "0.03em",
-            lineHeight: 1.4,
-            maxWidth: "280px",
-            fontFamily: "'Kanit', sans-serif",
-          }}
+          className="flex flex-col items-center gap-3 sm:items-start"
+          style={{ fontFamily: "'Kanit', sans-serif" }}
         >
-          a full stack developer driven by crafting scalable and intelligent
-          applications
-        </motion.p>
+          <LiveStatus />
+          <p
+            className="text-[#D7E2EA] text-center sm:text-left"
+            style={{
+              fontWeight: 300,
+              fontSize: "clamp(0.95rem, 1.3vw, 1.25rem)",
+              lineHeight: 1.45,
+              maxWidth: "300px",
+            }}
+          >
+            Full stack developer building scalable, intelligent applications.
+          </p>
+        </motion.div>
 
         <motion.div {...rise(T.footer + 0.12)}>
           <MagneticHover padding={80} strength={4}>

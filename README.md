@@ -8,13 +8,15 @@ A modern, interactive portfolio website built with React, TypeScript, and Tailwi
 
 ## ✨ Features
 
-- **Interactive Hero Section** - Orchestrated intro: masked headline reveal, portrait unveil and 3D Spline background
+- **Interactive Hero Section** - Giant name with a cut-out illustrated portrait layered in front of it, mouse-driven depth parallax, and a dimmed 3D Spline background (desktop only; phones and reduced-motion users get a lightweight gradient)
+- **Live Elements** - Availability badge with a live Pune clock, "Updated X ago" badges on project cards and a "Recently on GitHub" list, all pulled from the public GitHub API (cached 10 minutes, hidden if GitHub is unreachable)
+- **Interactive Details** - Continuously drifting project marquee, 3D cursor tilt on project screenshots, staggered skill tags and a copy-email button
 - **Floating Section Nav** - Appears after the hero with an animated active-section indicator and scroll progress bar
 - **Magnetic CTAs** - Contact buttons drift toward the cursor with a light sweep on hover
-- **Smooth Animations** - Fade-in effects, scroll-character text animations, and smooth transitions
+- **Smooth Animations** - Fade-in effects, word-by-word scroll text reveal, and smooth transitions
 - **Responsive Design** - Fully optimized for mobile, tablet, and desktop devices
 - **Project Showcase** - Sticky card animations with scale effects on scroll
-- **Skills Grid** - Beautiful skills section with organized layout
+- **Skills** - Skill areas with the tools for each shown as tags
 - **About Section** - Decorative elements with scroll parallax
 - **Contact CTA** - Call-to-action buttons throughout the site
 - **Modern UI** - Gradient text, dark theme, and polished aesthetics
@@ -27,7 +29,8 @@ A modern, interactive portfolio website built with React, TypeScript, and Tailwi
 - **Styling**: Tailwind CSS + PostCSS
 - **Build Tool**: Vite
 - **Animation**: Framer Motion
-- **UI Components**: shadcn/ui
+- **Icons**: lucide-react
+- **3D**: Spline viewer (hero background)
 - **Development**: ESLint, Node.js
 
 ---
@@ -69,24 +72,31 @@ A modern, interactive portfolio website built with React, TypeScript, and Tailwi
 ```
 My-Portfolio/
 ├── src/
-│   ├── components/        # Reusable UI components
-│   │   ├── FadeIn.tsx
-│   │   ├── MagneticHover.tsx
+│   ├── components/        # Reusable components
 │   │   ├── ContactCTA.tsx
-│   │   └── ui/           # shadcn/ui components
+│   │   ├── FadeIn.tsx
+│   │   ├── FloatingNav.tsx
+│   │   ├── LiveProjectButton.tsx
+│   │   ├── MagneticHover.tsx
+│   │   ├── RevealText.tsx
+│   │   └── ScrollCharacterText.tsx
 │   ├── sections/         # Page sections
 │   │   ├── HeroSection.tsx
+│   │   ├── MarqueeSection.tsx
 │   │   ├── AboutSection.tsx
 │   │   ├── SkillsSection.tsx
 │   │   ├── ProjectsSection.tsx
 │   │   └── FooterSection.tsx
 │   ├── hooks/            # Custom React hooks
-│   │   └── useMagneticHover.ts
+│   │   ├── useMagneticHover.ts
+│   │   └── useScrollOffset.ts
+│   ├── lib/              # Shared constants (nav links, easing)
 │   ├── App.tsx
 │   ├── index.css
 │   └── main.tsx
 ├── public/               # Static assets
-│   └── assets/
+│   ├── assets/           # Images (WebP for project shots & decorations)
+│   └── favicon.svg
 ├── index.html
 ├── package.json
 └── tailwind.config.js
@@ -98,7 +108,9 @@ My-Portfolio/
 
 ### Update Personal Info
 Edit the content in `/src/sections/` files:
-- **HeroSection.tsx** - Main headline and nav
+- **HeroSection.tsx** - Main headline and portrait
+- **FooterSection.tsx** - Contact links (LinkedIn, email, GitHub)
+- **src/lib/nav.ts** - Navigation links
 - **AboutSection.tsx** - Bio text and decorative images
 - **SkillsSection.tsx** - Skills list
 - **ProjectsSection.tsx** - Project portfolio items
@@ -106,14 +118,14 @@ Edit the content in `/src/sections/` files:
 ### Add Projects
 Update the `projects` array in `ProjectsSection.tsx`:
 ```typescript
-const projects = [
+const projects: Project[] = [
   {
     number: '01',
     name: 'Your Project',
     category: 'Tech Stack',
     liveUrl: 'https://your-project.example.com', // button is hidden when empty
-    col1Images: ['assets/image1.jpg', 'assets/image2.jpg'],
-    col2Image: 'assets/image3.jpg',
+    platform: 'web', // 'web': 16:9 screenshots, 'mobile': portrait phone screens
+    images: ['assets/main.webp', 'assets/side-1.webp', 'assets/side-2.webp'],
   },
   // Add more projects...
 ];
@@ -132,7 +144,7 @@ const projects = [
 Creates a magnetic hover effect where elements follow cursor movement within a defined radius.
 
 ### ScrollCharacterText
-Animates text character-by-character as the section comes into view.
+Lights text up word by word as it scrolls through the viewport.
 
 ### FadeIn
 Smoothly fades elements in with customizable delay and direction.
@@ -150,16 +162,16 @@ Smoothly fades elements in with customizable delay and direction.
 
 ## 🚀 Deployment
 
-### Deploy on Vercel (Recommended)
-1. Push your repository to GitHub
-2. Connect your GitHub repo to [Vercel](https://vercel.com)
-3. Vercel will auto-deploy on every push
+The live site is hosted on Netlify.
 
 ### Deploy on Netlify
-1. Build the project: `npm run build`
-2. Connect your Git repository to [Netlify](https://netlify.com)
-3. Set build command: `npm run build`
-4. Set publish directory: `dist`
+1. Connect your Git repository to [Netlify](https://netlify.com)
+2. Set build command: `npm run build`
+3. Set publish directory: `dist`
+
+### Deploy on Vercel
+1. Connect your GitHub repo to [Vercel](https://vercel.com)
+2. Vercel detects Vite automatically and deploys on every push
 
 ---
 
@@ -201,9 +213,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 **Dhruv Chaudhari**
 - 🌐 Portfolio: [dhruvresum.netlify.app](https://dhruvresum.netlify.app)
-- 💼 LinkedIn: [https://www.linkedin.com/in/dhruv-chaudhari-a49518320/](https://linkedin.com)
-- 🐙 GitHub: [https://github.com/DhruvChaudhari130905](https://github.com)
-- 📧 Email: dhruvchaudhari411@gmail.com
+- 💼 LinkedIn: [dhruv-chaudhari-a49518320](https://www.linkedin.com/in/dhruv-chaudhari-a49518320/)
+- 🐙 GitHub: [DhruvChaudhari130905](https://github.com/DhruvChaudhari130905)
+- 📧 Email: [dhruvchaudhari411@gmail.com](mailto:dhruvchaudhari411@gmail.com)
 
 ---
 
@@ -212,7 +224,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Built with [React](https://react.dev)
 - Styled with [Tailwind CSS](https://tailwindcss.com)
 - Animations with [Framer Motion](https://www.framer.com/motion)
-- UI Components from [shadcn/ui](https://ui.shadcn.com)
+- Icons from [Lucide](https://lucide.dev)
+- 3D scene with [Spline](https://spline.design)
 
 ---
 
